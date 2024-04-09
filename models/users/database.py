@@ -36,6 +36,30 @@ class DataStorage:
         except:
             self.session.rollback()
 
+    def get(self, model: models.Base, id):
+        """
+        Returns a single object from the database
+        Args:
+            model: The model to query
+            id: The id of the object to return
+        """
+        try:
+            return self.session.query(model).get(id)
+        except:
+            self.session.rollback()
+
+    def filter(self, model: models.Base, **kwargs):
+        """
+        Returns a list of objects from the database
+        Args:
+            model: The model to query
+            kwargs: The search parameters
+        """
+        try:
+            return self.session.query(model).filter_by(**kwargs).all()
+        except:
+            self.session.rollback()
+
     def all(self, model: models.Base):
         """
         Returns all objects of a given model
@@ -44,10 +68,10 @@ class DataStorage:
 
         """
         try:
-            return self.session.query(model).all()
-        except:
-            self.session.rollback()
-            raise Exception("An error occured")
+            users = self.data_storage.all(models.Users)
+            print(users)
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     def delete(self, data):
         """
@@ -76,6 +100,12 @@ class DataStorage:
         """
         self.session.close()
         self.engine.dispose()
+
+    def count(self, model):
+        """
+        Returns the number of objects in the database
+        """
+        return self.session.query(model).count()
     
     def create(self):
         """

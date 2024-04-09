@@ -19,7 +19,8 @@ class Users(Base):
     first_name = Column(String(50))
     last_name = Column(String(50))
     email = Column(String(50))
-    phone_no = Column(Integer(50))
+    phone_no = Column(Integer())
+    password = Column(String(50))
     items_found = relationship('Items', backref='users')
 
 
@@ -37,7 +38,7 @@ class Items(Base):
 
 class Connected_Items(Base):
     __tablename__  = 'connected_items'
-    item_id = Column(String(50))
+    item_id = Column(String(50), primary_key=True)
     owner_id = Column(Integer, ForeignKey('users.id'))
     reporter_id = Column(Integer, ForeignKey('users.id'))
     date_connected = Column(DateTime)

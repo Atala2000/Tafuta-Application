@@ -1,8 +1,5 @@
 import cmd
-
-"""
-This module contains the console class which is used to interact with the user
-"""
+from models.users.database import DataStorage
 
 class Tafuta(cmd.Cmd):
     """
@@ -10,6 +7,10 @@ class Tafuta(cmd.Cmd):
     """
     prompt = "(Tafuta) "
     intro = "Welcome to the Lost and Found Console"
+
+    def __init__(self):
+        super().__init__(completekey='tab')
+        self.data_storage = DataStorage()
 
     def do_quit(self, arg):
         """
@@ -29,41 +30,26 @@ class Tafuta(cmd.Cmd):
         """
         pass
 
-    def do_create(self, arg):
-        """
-        Create a new instance of a class
-        """
-        pass
-
-    def do_show(self, arg):
-        """
-        Show an instance of a class
-        """
-        pass
-
-    def do_destroy(self, arg):
-        """
-        Destroy an instance of a class
-        """
-        pass
-
     def do_all(self, arg):
         """
         Show all instances of a class
         """
-        pass
-
-    def do_update(self, arg):
-        """
-        Update an instance of a class
-        """
-        pass
+        args = arg.split()
+        if args:
+            try:
+                items = self.data_storage.all(args[0])
+                for item in items:
+                    print(item)
+            except Exception as e:
+                print(f"An error occurred: {e}")
+        else:
+            print("Please provide a class name")
 
     def do_help(self, arg):
         """
         Show help for a command
         """
-        
+        print("Help message")
 
 if __name__ == "__main__":
     Tafuta().cmdloop()
