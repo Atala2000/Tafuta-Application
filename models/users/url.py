@@ -13,7 +13,7 @@ def allowed_file(filename):
     """
     Checks if the file is allowed
     """
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in current_app.config['USERS_ALLOWED_EXTENSIONS']
 
 @users.route("/items", strict_slashes=False)
 def items():
