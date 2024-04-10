@@ -6,6 +6,9 @@ from functools import wraps
 
 app = Flask(__name__)
 
+# Load config file
+app.config.from_pyfile("config.py") 
+
 
 app.register_blueprint(users)
 
