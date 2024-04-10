@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-"""
-Module that creates flask routes for users
-"""
-from flask import Blueprint, render_template, jsonify, request, make_response
+from flask import Blueprint, flash, jsonify, redirect, request, url_for, current_app
+import os
+from werkzeug.utils import secure_filename
 
 from models.users import models
 from models.users.database import DataStorage
@@ -11,111 +9,71 @@ data = DataStorage()
 
 users = Blueprint("users", __name__, template_folder="templates", url_prefix="/users")
 
+def allowed_file(filename):
+    """
+    Checks if the file is allowed
+    """
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @users.route("/items", strict_slashes=False)
 def items():
     """
     Returns a list of all items in the database
     """
-
     return jsonify({"Items": data.count(models.Items)})
 
-
-@users.route("/items/<category>")
-def category(category):
-    """
-    Returns a list of items in a given category
-    """
-
-    data = DataStorage()
-
-    return jsonify({"Items": data.filter(models.Items, category=category)})
-
-
-@users.route("/items/<int:id>")
-def item(id):
-    """
-    Returns a single item
-    """
-
-    return jsonify({"Item": data.get(models.Items, id)})
-
-
-@users.route("/items/connected")
-def connected():
-    """
-    Returns a list of connected items
-    """
-
-    return jsonify({"Items": data.count(models.Connected_Items)})
-
-
-@users.route("/items/connected/<int:id>")
-def connected_item(id):
-    """
-    Returns a single connected item
-    """
-
-    return jsonify({"Item": data.get(models.Connected_Items, id)})
-
-
-@users.route("/items/connected/<int:id>/owner")
-def connected_owner(id):
-    """
-    Returns the owner of a connected item
-    """
-
-    return jsonify({"Owner": data.get(models.Users, id)})
-
-
-@users.route("/items/connected/<int:id>/reporter")
-def connected_reporter(id):
-    """
-    Returns the reporter of a connected item
-    """
-
-    return jsonify({"Reporter": data.get(models.Users, id)})
-
-
-@users.route("/items/connected/<int:id>/location")
-def connected_location(id):
-    """
-    Returns the location of a connected item
-    """
-
-    return jsonify({"Location": data.get(models.Connected_Items, id)})
-
-
-@users.route("items", methods=["POST"])
+@users.route("/items", methods=["POST"])
 def add_item():
     """
     Adds a new item to the database
     """
-    data.add(
-        models.Items(
-            date_found=request.json["date_found"],
-            location_found=request.json["location_found"],
-            description=request.json["description"],
-            filename=request.json["filename"],
-            category=request.json["category"],
-            users_id=request.json["users_id"],
+
+    users_upload_folder = current_app.config['UPLOAD_FOLDER']
+    users_allowed_extensions = current_app.config['USERS_ALLOWED_EXTENSIONS']
+
+
+    try:
+        data.add(
+            models.Items(
+                date_found=request.json["date_found"],
+                location_found=request.json["location_found"],
+                description=request.json["description"],
+                filename=request.json["filename"],
+                category=request.json["category"],
+                users_id=request.json["users_id"],
+            )
         )
-    )
 
-    return make_response(jsonify({"message": "Item added"}), 201)
+        if "file" not in request.files:
+            flash("No file part")
+            return jsonify({"error": "No file part"}), 400
+        file = request.files["file"]
+        if file.filename == '':
+            flash("No selected file")
+            return jsonify({"error": "No selected file"}), 400
+        if file and allowed_file(file.filename, users_allowed_extensions):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(users_upload_folder, filename))
+            return jsonify({"message": "Item added"}), 201
+        else:
+            return jsonify({"error": "File type not allowed"}), 400
+    except:
+        return jsonify({"error": "An error occurred"}), 500
 
-
-@users.route("/signup", method=['POST'])
+@users.route("/signup", methods=["POST"])
 def signup():
     """
     Adds a new user to the database
     """
-    data.add(
-        models.Users(
-            username=request.json["username"],
-            email=request.json["email"],
-            password=request.json["password"],
+    try:
+        data.add(
+            models.Users(
+                username=request.json["username"],
+                email=request.json["email"],
+                password=request.json["password"],
+            )
         )
-    )
 
-    return make_response(jsonify({"message": "User added"}), 201)
+        return jsonify({"message": "User added"}), 201
+    except:
+        return jsonify({"error": "An error occurred"}), 500
