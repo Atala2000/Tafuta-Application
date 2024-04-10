@@ -1,7 +1,17 @@
+#!/usr/bin/env python3
+"""
+Module that contains the console class
+"""
+
 import cmd
 from models.users.database import DataStorage
+from models.users import models
 
-MODELS_ARRAY = ["Users", "Items", "Connected_Items"]
+MODELS = {
+    "users": models.Users,
+    "items": models.Items,
+    "connected_items": models.Connected_Items,
+}
 
 
 class Tafuta(cmd.Cmd):
@@ -46,16 +56,21 @@ class Tafuta(cmd.Cmd):
         Show all instances of a class
         """
         args = arg.split()
-        if args and args[0] in MODELS_ARRAY:
+        if args and args[0].lower() in MODELS:
             try:
-                items = self.data_storage.all(args[0])
+                items = self.data_storage.all(MODELS[args[0]])
                 for item in items:
-                    print(item)
+                    print(f"Instance of {args[0]}: {item.__dict__}")
+                    print()
+                    for key, value in item.__dict__.items():
+                        if key != "_sa_instance_state":
+                            print(f"{key}: {value}")
+                    print()
             except Exception as e:
                 print(f"An error occurred: {e}")
         else:
             print("Allowed classnames are: ")
-            for model_class in MODELS_ARRAY:
+            for model_class in MODELS:
                 print(model_class)
             print()
 
@@ -71,23 +86,101 @@ class Tafuta(cmd.Cmd):
         """
         super().do_help(arg)
 
+    def do_test_object(self, arg):
+        """
+        Creates test objects
+        Usage is `test_object` <classname> <firstname> <lastname> <email> <password>
+        """
+        try:
+            args = arg.split()
+            if len(args) < 1:
+                print(
+                    f"""Insufficient arguments provided. Usage is `test_object` <classname> <firstname>
+                <lastname> <email> <password>
+                """
+                )
+                return
+
+            object_type = args[0]
+            if object_type == "user" and len(args) == 6:
+                self.data_storage.add(
+                    models.Users(
+                        first_name=args[1],
+                        last_name=args[2],
+                        email=args[3],
+                        password=args[4],
+                        phone_no=int(args[5]),
+                    )
+                )
+                print("User object created successfully.")
+            elif object_type == "items" and len(args) == 7:
+                self.data_storage.add(
+                    models.Items(
+                        date_found=args[1],
+                        location_found=args[2],
+                        description=args[3],
+                        filename=args[4],
+                        category=args[5],
+                        users_id=args[6],
+                    )
+                )
+                print("Item object created successfully.")
+            elif object_type == "connected_items" and len(args) == 6:
+                self.data_storage.add(
+                    models.Connected_Items(
+                        item_id=args[1],
+                        owner_id=args[2],
+                        reporter_id=args[3],
+                        date_connected=args[4],
+                        location_connected=args[5],
+                    )
+                )
+                print("Connected item object created successfully.")
+            else:
+                print("Invalid arguments provided.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
     def do_delete(self, arg):
         """
         Delete an instance of a class
         """
         args = arg.split()
-        if args and args[0] in MODELS_ARRAY:
+        if args and args[0].lower() in MODELS:
             try:
-                object_instance = self.data_storage.get(args[0], args[1])
+                object_instance = self.data_storage.get(MODELS[args[0]], int(args[1]))
                 self.data_storage.delete(object_instance)
                 print(f"Deleted {args[0]} with id {args[1]}")
             except Exception as e:
                 print(f"An error occurred: {e}")
         else:
             print("Allowed classnames are: ")
-            for model_class in MODELS_ARRAY:
+            for model_class in MODELS:
                 print(model_class)
             print()
+
+    def do_total(self, arg):
+        """
+        Returns a count of the selected class
+        Args:
+            arg (str): Classname
+        """
+        if not arg:
+            print("Usage: total <classname>")
+            return
+
+        classname = arg.strip()
+
+        # Assuming MODELS_ARRAY is defined elsewhere in your code
+        if classname in MODELS:
+            try:
+                count = self.data_storage.count(MODELS[classname])
+                print(f"Total count of {classname}: {count}")
+            except Exception as e:
+                print(f"An error occurred: {e}")
+        else:
+            print("Invalid class name. Allowed classnames are:")
+            print(", ".join(MODELS))
 
 
 if __name__ == "__main__":
