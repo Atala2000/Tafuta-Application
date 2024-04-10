@@ -22,6 +22,7 @@ class Users(Base):
     phone_no = Column(Integer())
     password = Column(String(50))
     items_found = relationship('Items', backref='users')
+    connected_items = relationship('Connected_Items', backref='users')
 
 
 class Items(Base):
