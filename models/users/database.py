@@ -9,14 +9,15 @@ from sqlalchemy.orm import Session
 
 load_dotenv()
 
+
 class DataStorage:
     url_object = URL.create(
-    'mysql+mysqldb',
-    username=os.getenv('DATABASE_USER'),
-    password=os.getenv("DATABASE_PASS"),
-    host=os.getenv("HOST"),
-    database=os.getenv("DATABASE"),
-)
+        "mysql+mysqldb",
+        username=os.getenv("DATABASE_USER"),
+        password=os.getenv("DATABASE_PASS"),
+        host=os.getenv("HOST"),
+        database=os.getenv("DATABASE"),
+    )
 
     def __init__(self):
         """
@@ -60,18 +61,20 @@ class DataStorage:
         except:
             self.session.rollback()
 
-    def all(self, model: models.Base):
+    def all(self, model):
         """
         Returns all objects of a given model
         Args:
             model: The model to query
-
+        Returns:
+            list: List of objects of the given model
         """
         try:
-            users = self.data_storage.all(models.Users)
-            print(users)
+            objects = self.session.query(model).all()
+            return objects
         except Exception as e:
-            print(f"An error occurred: {e}")
+            print(f"An error occurred while fetching objects: {e}")
+            return []
 
     def delete(self, data):
         """
@@ -84,7 +87,6 @@ class DataStorage:
             self.session.commit()
         except:
             self.session.rollback()
-
 
     def update(self, data):
         """
@@ -106,7 +108,7 @@ class DataStorage:
         Returns the number of objects in the database
         """
         return self.session.query(model).count()
-    
+
     def create(self):
         """
         Creates the database tables
