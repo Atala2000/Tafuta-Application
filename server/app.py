@@ -1,5 +1,6 @@
 from flask import Flask
 from models.users.url import users
+from models.items.url import items
 from flask import Flask, request, jsonify, make_response, render_template, session
 from datetime import datetime, timedelta
 from functools import wraps
@@ -11,6 +12,7 @@ app.config.from_pyfile("config.py")
 
 
 app.register_blueprint(users)
+app.register_blueprint(items)
 
 
 

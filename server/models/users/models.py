@@ -25,7 +25,8 @@ class Users(Base):
     connected_items_owner = relationship('Connected_Items', foreign_keys='Connected_Items.owner_id', backref='owner')
     connected_items_reporter = relationship('Connected_Items', foreign_keys='Connected_Items.reporter_id', backref='reporter')
 
-
+    def __repr__(self):
+        return f'<User {self.first_name} {self.last_name}, {self.email}>'
 class Items(Base):
     __tablename__ = 'items_found'
 

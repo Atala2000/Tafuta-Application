@@ -9,56 +9,25 @@ data = DataStorage()
 
 users = Blueprint("users", __name__, template_folder="templates", url_prefix="/users")
 
-def allowed_file(filename):
-    """
-    Checks if the file is allowed
-    """
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in current_app.config['USERS_ALLOWED_EXTENSIONS']
 
-@users.route("/items", strict_slashes=False)
-def items():
+@users.route("/", strict_slashes=False)
+def user_list():
     """
-    Returns a list of all items in the database
+    Returns a list of all users in the database
     """
-    return jsonify({"Items": data.count(models.Items)})
-
-@users.route("/items", methods=["POST"])
-def add_item():
-    """
-    Adds a new item to the database
-    """
-
-    users_upload_folder = current_app.config['UPLOAD_FOLDER']
-    users_allowed_extensions = current_app.config['USERS_ALLOWED_EXTENSIONS']
+    return jsonify({"Users": data.count(models.Users)})
 
 
-    try:
-        data.add(
-            models.Items(
-                date_found=request.json["date_found"],
-                location_found=request.json["location_found"],
-                description=request.json["description"],
-                filename=request.json["filename"],
-                category=request.json["category"],
-                users_id=request.json["users_id"],
-            )
-        )
+@users.route("/<int:id>", methods=["GET"], strict_slashes=False)
+def specific_user(id: int) -> jsonify:
+    """
+    Retrieves Details of a specific user using their id
+    Args:
+        id (int): The id of the user to retrieve
+    """
+    user = data.get(models.Users, id)
+    return jsonify(data.to_dict(user))
 
-        if "file" not in request.files:
-            flash("No file part")
-            return jsonify({"error": "No file part"}), 400
-        file = request.files["file"]
-        if file.filename == '':
-            flash("No selected file")
-            return jsonify({"error": "No selected file"}), 400
-        if file and allowed_file(file.filename, users_allowed_extensions):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(users_upload_folder, filename))
-            return jsonify({"message": "Item added"}), 201
-        else:
-            return jsonify({"error": "File type not allowed"}), 400
-    except:
-        return jsonify({"error": "An error occurred"}), 500
 
 @users.route("/signup", methods=["POST"])
 def signup():
