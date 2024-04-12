@@ -2,11 +2,8 @@
 ## Description
 This is an application that lets users look for items they've lost or found. Users can post items they've lost or found and also view items that have been posted by other users. Users can also comment on the items that have been posted.
 ## Authors
-- [Omeno Kidiavayi]
-- [Github](https://github.com/Atala2000)
-
-- [Cyril Ondanje]
-- [Github](https://github.com/ondanje)
+- [Omeno Kidiavayi](https://github.com/Atala2000)
+- [Cyril Ondanje](https://github.com/ondanje)
   
 ## Technologies Used
 - Python (Flask)
