@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Form</title>
+</head>
+<body>
+    <h2>Add Item</h2>
+    <form action="/items/add" method="POST" enctype="multipart/form-data">
+        <label for="location">Location:</label>
+        <input type="text" id="location_found" name="location_found"><br><br>
+
+        <label for="date_found">Date found</label>
+        <input type="date" id="date_found" name="date_found"><br><br>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea><br><br>
+        
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category"><br><br>
+
+        <label for="users_id">User id</label>
+        <input type="number" id="users_id" name="users_id"><br><br>
+        <input type="file" name="file" id="file"><br><br>
+        
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

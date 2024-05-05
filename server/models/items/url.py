@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, jsonify, redirect, request, url_for, current_app
+from flask import Blueprint, flash, jsonify, redirect, request, url_for, current_app, render_template
 import os
 from werkzeug.utils import secure_filename
 
@@ -29,42 +29,40 @@ def items_count():
     return jsonify({"Items": data.count(models.Items)})
 
 
-@items.route("/", methods=["POST"])
+@items.route("/add", methods=["POST"])
 def add_item():
-    """
-    Adds a new item to the database
-    """
-
     users_upload_folder = current_app.config["UPLOAD_FOLDER"]
-    users_allowed_extensions = current_app.config["USERS_ALLOWED_EXTENSIONS"]
 
-    try:
-        data.add(
-            models.Items(
-                date_found=request.json["date_found"],
-                location_found=request.json["location_found"],
-                description=request.json["description"],
-                filename=request.json["filename"],
-                category=request.json["category"],
-                users_id=request.json["users_id"],
+    # Check if a file is included in the request
+    if "file" not in request.files:
+        return jsonify({"error": "No file part"}), 400
+
+    file = request.files["file"]
+    if file.filename == "":
+        return jsonify({"error": "No selected file"}), 400
+
+    # Validate file extension
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(users_upload_folder, filename))
+
+        try:
+            data.add(
+                models.Items(
+                    date_found=request.form["date_found"],
+                    location_found=request.form["location_found"],
+                    description=request.form["description"],
+                    filename=filename,
+                    category=request.form["category"],
+                    users_id=request.form["users_id"],
+                )
             )
-        )
+            return jsonify({"message": "Item added successfully"}), 201
+        except Exception as e:
+            return jsonify({"error": f"An error occurred: {e}"}), 500
+    else:
+        return jsonify({"error": "File type not allowed"}), 400
 
-        if "file" not in request.files:
-            flash("No file part")
-            return jsonify({"error": "No file part"}), 400
-        file = request.files["file"]
-        if file.filename == "":
-            flash("No selected file")
-            return jsonify({"error": "No selected file"}), 400
-        if file and allowed_file(file.filename, users_allowed_extensions):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(users_upload_folder, filename))
-            return jsonify({"message": "Item added"}), 201
-        else:
-            return jsonify({"error": "File type not allowed"}), 400
-    except:
-        return jsonify({"error": "An error occurred"}), 500
 
 
 @items.route("/items/<int:id>", methods=["GET"])
@@ -74,17 +72,58 @@ def get_item(id):
     """
     item = data.get(models.Items, id)
     if item:
-        return jsonify(item.serialize())
+        return jsonify(data.to_dict(item))
+    else:
+        return jsonify({"error": "Item not found"}), 404
+    
+@items.route("/items/<int:id>", methods=["DELETE"])
+def delete_item(id):
+    """
+    Deletes an item from the database
+    """
+    item = data.get(models.Items, id)
+    if item:
+        data.delete(item)
+        return jsonify({"message": "Item deleted successfully"})
     else:
         return jsonify({"error": "Item not found"}), 404
 
 
-@items.route("/items/<str:category>", methods=['GET'])
+@items.route("/items/<int:id>", methods=["PUT"])
+def update_item(id):
+    """
+    Updates an item in the database
+    """
+    item = data.get(models.Items, id)
+    if item:
+        item.date_found = request.form["date_found"]
+        item.location_found = request.form["location_found"]
+        item.description = request.form["description"]
+        item.category = request.form["category"]
+        item.users_id = request.form["users_id"]
+        data.update()
+        return jsonify({"message": "Item updated successfully"})
+    else:
+        return jsonify({"error": "Item not found"}), 404
+    
+
+@items.route("/items/<string:category>", methods=['GET'])
 def get_items_by_category(category):
     """
     Returns a list of items by category
     """
     items = data.filter(models.Items, category=category)
+    if items:
+        return jsonify(data.to_dict(items))
+    else:
+        return jsonify({"error": "No items found"}), 404
+
+@items.route("/items/<int:users_id>")
+def get_items_by_user(users_id):
+    """
+    Returns a list of items by user
+    """
+    items = data.filter(models.Items, users_id=users_id)
     if items:
         return jsonify(data.to_dict(items))
     else:

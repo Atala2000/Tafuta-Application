@@ -27,11 +27,12 @@ class Users(Base):
 
     def __repr__(self):
         return f'<User {self.first_name} {self.last_name}, {self.email}>'
+    
 class Items(Base):
     __tablename__ = 'items_found'
 
     id = Column(Integer, primary_key=True)
-    date_found = Column(DateTime)
+    date_found = Column(DateTime, default=datetime.now())
     location_found = Column(String(50))
     description = Column(Text(64000))
     filename = Column(String(50))

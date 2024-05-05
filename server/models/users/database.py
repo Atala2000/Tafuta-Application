@@ -23,7 +23,7 @@ class DataStorage:
         """
         Initializes the data storage class and creates the engine connector, session and models
         """
-        self.engine = create_engine(DataStorage.url_object)
+        self.engine = create_engine(DataStorage.url_object, echo=False)
         self.session = Session(bind=self.engine)
         self.models = models
 
@@ -116,7 +116,7 @@ class DataStorage:
         self.models.Base.metadata.create_all(self.engine)
 
     def to_dict(self, obj):
-        """
-        Converts an object to a dictionary
-        """
-        return {col.name: getattr(obj, col.name) for col in obj.__table__.columns}
+        if isinstance(obj, list):
+            return [self.to_dict(item) for item in obj]
+        else:
+            return {col.name: getattr(obj, col.name) for col in obj.__table__.columns}

@@ -6,6 +6,8 @@ Module that contains the console class
 import cmd
 from models.users.database import DataStorage
 from models.users import models
+from datetime import datetime
+import os
 
 MODELS = {
     "users": models.Users,
@@ -59,9 +61,10 @@ class Tafuta(cmd.Cmd):
         if args and args[0].lower() in MODELS:
             try:
                 items = self.data_storage.all(MODELS[args[0]])
+                print(f"Instance of {args[0]}")
                 for item in items:
-                    print(f"Instance of {args[0]}: {item.__dict__}")
                     print()
+
                     for key, value in item.__dict__.items():
                         if key != "_sa_instance_state":
                             print(f"{key}: {value}")
@@ -113,15 +116,16 @@ class Tafuta(cmd.Cmd):
                     )
                 )
                 print("User object created successfully.")
-            elif object_type == "items" and len(args) == 7:
+
+            elif object_type == "items" and len(args) == 6:
                 self.data_storage.add(
                     models.Items(
-                        date_found=args[1],
-                        location_found=args[2],
-                        description=args[3],
-                        filename=args[4],
-                        category=args[5],
-                        users_id=args[6],
+                        date_found=datetime.now(),
+                        location_found=args[1],
+                        description=args[2],
+                        filename=args[3],
+                        category=args[4],
+                        users_id=int(args[5]),
                     )
                 )
                 print("Item object created successfully.")
@@ -182,6 +186,20 @@ class Tafuta(cmd.Cmd):
             print("Invalid class name. Allowed classnames are:")
             print(", ".join(MODELS))
 
+    def do_backup(self, arg):
+        """
+        Creates a backup file of the current database storage
+        """
+        from models.users.database import DataStorage
+        credentials = {
+            'database_name': DataStorage.url_object.database,
+            'database_user': DataStorage.url_object.username,
+        }
+        sql_command
+        try:
+            os.system(f"mysqldump -u -{credentials.get('database_user')} -p -{credentials.get('database_name')} > data-dump.sql")
+        except:
+            print(f"An error occured")
 
 if __name__ == "__main__":
     Tafuta().cmdloop()

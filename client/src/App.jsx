@@ -1,12 +1,23 @@
-import Button from '@mui/material/Button'
+import { Link, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import './App.css';
+import Index from './components/Index';
+import Footer from './components/Footer';
+import Report from './components/Report';
+
 
 function App() {
-
   return (
     <>
-      <Button variant="contained">This is a test to emsure MUI works</Button>
+        <Navbar />
+        <Routes>
+          <Route path='/' element={<Index />} />
+          <Route path='/report' element={<Report />} />
+          
+        </Routes>
+        <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

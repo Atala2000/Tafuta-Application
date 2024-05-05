@@ -1,0 +1,77 @@
+header {
+  background: linear-gradient(to right, aqua, rgba(8, 61, 75, 0.9));
+  display: flex;
+  align-items: flex-end;
+  padding: 15px;
+  position: relative;
+  height: 50vh;
+
+  #title {
+    font-size: 50px;
+  }
+
+  .header-details {
+    text-align: left;
+    padding: 10px;
+
+    /* Styling for report button */
+    button {
+      background-color: black;
+      color: white;
+      border-radius: 20px;
+      font-size: 20px;
+      border: none;
+      padding: 10px 5px;
+      width: 100px;
+
+      &:hover {
+        background-color: rgba(29, 27, 27, 0.9);
+        color: white;
+        transition: 0.3s ease-in-out;
+      }
+    }
+  }
+
+  /* image of phone with thumbs up */
+  .header-mascot {
+    position: absolute;
+    top: 100px;
+    right: 0;
+  }
+}
+
+/* white text in the title page */
+.text-white {
+  color: whitesmoke;
+  font-weight: bold;
+}
+
+.process-details {
+  z-index: 4;
+  margin-top: 50px;
+
+  .title {
+    font-size: 35px;
+  }
+
+  #process {
+    height: 30vh;
+  }
+}
+
+.our-numbers {
+  height: 50vh;
+
+  #card-numbers {
+    height: 80%;
+    background: linear-gradient(
+      to bottom,
+      rgb(202, 241, 233),
+      rgba(3, 51, 78, 0.7)
+    );
+
+    hr {
+      width: 30%;
+    }
+  }
+}
