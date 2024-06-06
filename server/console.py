@@ -4,10 +4,9 @@ Module that contains the console class
 """
 
 import cmd
-from models.users.database import DataStorage
-from models.users import models
+from app.models import models
 from datetime import datetime
-import os
+from app.models.database import DataStorage
 
 MODELS = {
     "users": models.Users,
@@ -186,20 +185,22 @@ class Tafuta(cmd.Cmd):
             print("Invalid class name. Allowed classnames are:")
             print(", ".join(MODELS))
 
-    def do_backup(self, arg):
-        """
-        Creates a backup file of the current database storage
-        """
-        from models.users.database import DataStorage
-        credentials = {
-            'database_name': DataStorage.url_object.database,
-            'database_user': DataStorage.url_object.username,
-        }
-        sql_command
-        try:
-            os.system(f"mysqldump -u -{credentials.get('database_user')} -p -{credentials.get('database_name')} > data-dump.sql")
-        except:
-            print(f"An error occured")
+    # def do_backup(self, arg):
+    #     """
+    #     Creates a backup file of the current database storage
+    #     """
+    #     credentials = {
+    #         'database_name': DataStorage.url_object.database,
+    #         'database_user': DataStorage.url_object.username,
+    #         'password': DataStorage.url_object.password,  # Assuming you have a password attribute
+    #     }
+
+    #     try:
+    #         with open('backup.sql', 'w') as backup_file:
+    #             subprocess.run(["sqlcmd", "-U", credentials['database_user'], "-P", credentials['password'], "-d", credentials['database_name'], "-Q", "BACKUP DATABASE [{0}] TO DISK='backup.sql'".format(credentials['database_name'])], stdout=backup_file)
+    #         print("Backup completed successfully.")
+    #     except subprocess.CalledProcessError as e:
+    #         print("Error:", e)
 
 if __name__ == "__main__":
     Tafuta().cmdloop()
