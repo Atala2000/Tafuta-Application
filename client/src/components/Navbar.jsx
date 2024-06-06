@@ -1,39 +1,25 @@
-import { Link, NavLink } from "react-router-dom"
-import '../assets/styles/Navbar.css'
-import { useEffect, useState } from "react"
+import { Navbar, NavbarToggle } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import { Nav } from "react-bootstrap";
+import { Routes } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const Navbar = () => {
-    const [scrolled, setScrolled] = useState(false);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                setScrolled(true);
-            } else {
-                setScrolled(false);
-            }
-        };
-        document.addEventListener("scroll", handleScroll);
-
-        return () => {
-            document.removeEventListener("scroll", handleScroll);
-        };
-    }, []);
-
-
+const NavBar = () => {
     return (
-        <>
-            <nav className={scrolled ? "nav-bar scrolled" : "nav-bar"}>
-                <div className="logo">
-                </div>
-                <div className="nav-links">
-                    <NavLink to='/'>Home</NavLink>
-                    <NavLink to='/report'>Report</NavLink>
-                    <NavLink to='/items'>Items</NavLink>
-                </div>
-            </nav>
-        </>
+        <Navbar collapseOnSelect bg="dark" data-bs-theme="dark" expand="lg" className="bg-body-tertiary">
+            <Container>
+                <Navbar.Brand href="#home">Tafuta</Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="me-auto">
+                            <Nav.Link href="#home" as={Link} to="/">Home</Nav.Link>
+                            <Nav.Link href="#features" as={Link} to="/items">Items</Nav.Link>
+                            <Nav.Link href="#pricing" as={Link} to="/report">Report</Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
     )
 }
 
-export default Navbar
+export default NavBar
