@@ -9,11 +9,12 @@ db = SQLAlchemy()
 migrate = Migrate()
 jwt = JWTManager()
 
+
 def create_app():
     app = Flask(__name__)
-    
+
     # Ensure the path to config.py is correct
-    app.config.from_pyfile(os.path.join(os.path.dirname(__file__), '../config.py'))
+    app.config.from_pyfile(os.path.join(os.path.dirname(__file__), "../config.py"))
 
     # Initialize extensions with the app
     db.init_app(app)
@@ -22,9 +23,15 @@ def create_app():
 
     # Import and register blueprints
     from app.users import bp as users_bp
-    app.register_blueprint(users_bp, url_prefix='/users')
+
+    app.register_blueprint(users_bp, url_prefix="/users")
 
     from app.items import bp as items_bp
-    app.register_blueprint(items_bp, url_prefix='/items')
+
+    app.register_blueprint(items_bp, url_prefix="/items")
+
+    from app.auth import bp as auth_bp
+
+    app.register_blueprint(auth_bp, url_prefix="/auth")
 
     return app
