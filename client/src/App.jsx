@@ -1,23 +1,24 @@
-import { Link, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import './App.css';
-import Index from './components/Index';
-import Footer from './components/Footer';
-import Report from './components/Report';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import NavBar from "./components/Navbar";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Home from "./components/Home";
+import Report from "./components/Report";
+import Items from "./components/Items";
 
-
-function App() {
+const App = () => {
   return (
-    <>
-        <Navbar />
+    <BrowserRouter>
+      <NavBar />
+      <Container> {/* Add top margin to create space */}
         <Routes>
-          <Route path='/' element={<Index />} />
-          <Route path='/report' element={<Report />} />
-          
+          <Route path="/" element={<Home />} />
+          <Route path="/items" element={<Items />} />
+          <Route path="/report" element={<Report />} />
         </Routes>
-        <Footer />
-    </>
-  );
+      </Container>
+    </BrowserRouter>
+  )
 }
 
 export default App;
