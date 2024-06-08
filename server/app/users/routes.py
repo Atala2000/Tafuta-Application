@@ -26,25 +26,4 @@ def specific_user(id: int) -> jsonify:
     return jsonify(data.to_dict(user))
 
 
-@users.route("/signup", methods=["POST"], strict_slashes=False)
-def signup():
-    """
-    Adds a new user to the database
-    """
-    try:
 
-        password_bytes = request.json.get("password").encode('utf-8')
-        hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
-
-        data.add(
-            models.Users(
-                email=request.json["email"],
-                password=hashed_password,
-                first_name=request.json.get("first_name"),
-                phone_no=request.json.get("phone_no")
-            )
-        )
-
-        return jsonify({"message": "User added"}), 201
-    except Exception as e:
-        return jsonify({"error": e}), 500
