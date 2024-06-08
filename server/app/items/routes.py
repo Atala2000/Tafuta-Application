@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request, current_app
 import os
+from flask_jwt_extended import jwt_required
 from werkzeug.utils import secure_filename
 from app.models import models
 from app.models.database import DataStorage
@@ -28,6 +29,7 @@ def items_count():
     return jsonify({"Items": data.count(models.Items)})
 
 
+@jwt_required()
 @items.route("/add", methods=["POST"])
 def add_item():
     users_upload_folder = current_app.config["UPLOAD_FOLDER"]
@@ -74,6 +76,7 @@ def get_item(id):
         return jsonify(data.to_dict(item))
     else:
         return jsonify({"error": "Item not found"}), 404
+    
     
 @items.route("/items/<int:id>", methods=["DELETE"])
 def delete_item(id):
