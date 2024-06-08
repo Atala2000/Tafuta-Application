@@ -15,6 +15,7 @@ def create_app():
 
     # Ensure the path to config.py is correct
     app.config.from_pyfile(os.path.join(os.path.dirname(__file__), "../config.py"))
+    app.config['JWT_TOKEN_LOCATION'] = ['headers']
 
     # Initialize extensions with the app
     db.init_app(app)
