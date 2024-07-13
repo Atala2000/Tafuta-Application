@@ -1,4 +1,13 @@
-from flask import Blueprint, jsonify, request, current_app
+from flask import (
+    Blueprint,
+    jsonify,
+    logging,
+    request,
+    current_app,
+    send_from_directory,
+    url_for,
+    render_template
+)
 import os
 from flask_jwt_extended import jwt_required
 from werkzeug.utils import secure_filename
@@ -7,7 +16,6 @@ from app.models.database import DataStorage
 from app.items import bp as items
 
 data = DataStorage()
-
 
 
 def allowed_file(filename):
@@ -58,27 +66,45 @@ def add_item():
                     users_id=request.form["users_id"],
                 )
             )
-            return jsonify({"message": "Item added successfully"}), 201
+            file_url = url_for("items.get_item_file", filename=filename)
+            return (
+                jsonify({"message": "Item added successfully", "file_url": file_url}),
+                201,
+            )
         except Exception as e:
             return jsonify({"error": f"An error occurred: {e}"}), 500
     else:
         return jsonify({"error": "File type not allowed"}), 400
 
 
-
-@items.route("/items/<int:id>", methods=["GET"])
+@items.route("/<int:id>", methods=["GET"], strict_slashes=False)
 def get_item(id):
     """
     Returns a single item from the database
     """
     item = data.get(models.Items, id)
     if item:
-        return jsonify(data.to_dict(item))
+        item_details = data.to_dict(item)
+        file_url = url_for("items.get_item_file", filename=item.filename)
+        item_details["file_url"] = file_url
+        return jsonify(item_details)
     else:
         return jsonify({"error": "Item not found"}), 404
-    
-    
-@items.route("/items/<int:id>", methods=["DELETE"])
+
+
+@items.route("/uploads/<filename>")
+def get_item_file(filename):
+    """
+    Returns the file associated with a single item from the database.
+    """
+    return send_from_directory(
+        current_app.config["UPLOAD_FOLDER"],
+        filename,
+        as_attachment=False,
+    )
+
+
+@items.route("/<int:id>", methods=["DELETE"])
 def delete_item(id):
     """
     Deletes an item from the database
@@ -91,7 +117,8 @@ def delete_item(id):
         return jsonify({"error": "Item not found"}), 404
 
 
-@items.route("/items/<int:id>", methods=["PUT"])
+@jwt_required()
+@items.route("/<int:id>", methods=["PUT"])
 def update_item(id):
     """
     Updates an item in the database
@@ -107,26 +134,42 @@ def update_item(id):
         return jsonify({"message": "Item updated successfully"})
     else:
         return jsonify({"error": "Item not found"}), 404
-    
 
-@items.route("/items/<string:category>", methods=['GET'])
+
+@items.route("/category/<string:category>", methods=["GET"])
 def get_items_by_category(category):
     """
     Returns a list of items by category
     """
-    items = data.filter(models.Items, category=category)
-    if items:
-        return jsonify(data.to_dict(items))
+    items_list = data.filter(models.Items, category=category)
+    if items_list:
+        return jsonify(data.to_dict(items_list))
     else:
         return jsonify({"error": "No items found"}), 404
 
-@items.route("/items/<int:users_id>")
+
+@items.route("/user/<int:users_id>", methods=["GET"])
 def get_items_by_user(users_id):
     """
     Returns a list of items by user
     """
-    items = data.filter(models.Items, users_id=users_id)
-    if items:
-        return jsonify(data.to_dict(items))
+    items_list = data.filter(models.Items, users_id=users_id)
+    if items_list:
+        return jsonify(data.to_dict(items_list))
     else:
         return jsonify({"error": "No items found"}), 404
+
+
+@items.route("/item/test/<int:id>", methods=["GET"], strict_slashes=False)
+def display_item(id):
+    """
+    Renders the item details along with the uploaded image.
+    """
+    item = data.get(models.Items, id)
+    if item:
+        item_details = data.to_dict(item)
+        file_url = url_for("items.get_item_file", filename=item.filename)
+        item_details["file_url"] = file_url
+        return render_template("item.html", item=item_details)
+    else:
+        return jsonify({"error": "Item not found"}), 404
