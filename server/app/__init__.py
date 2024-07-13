@@ -22,6 +22,11 @@ def create_app():
     migrate.init_app(app, db)
     jwt.init_app(app)
 
+
+    @app.route("/", methods=["GET"], strict_slashes=False)
+    def home():
+        return "Welcome to the Lost and Found API"
+    
     # Import and register blueprints
     from app.users import bp as users_bp
 
