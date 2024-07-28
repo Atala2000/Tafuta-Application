@@ -1,4 +1,4 @@
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, create_refresh_token
 from app.auth import bp as auth
 from app.models import models
 from flask import request, jsonify
@@ -8,8 +8,21 @@ import bcrypt
 
 data_storage = DataStorage()
 
+@auth.route("/refresh", methods=["POST"], strict_slashes=False)
+@jwt_required(refresh=True)
+def refresh():
+    """
+    Refreshes the access token
+    """
+    current_user = get_jwt_identity()
+    access_token = create_access_token(identity=current_user)
+    return jsonify(access_token=access_token)
+
 @auth.route("/login", methods=["POST"], strict_slashes=False)
 def login():
+    """
+    Logs in a user and returns an access token
+    """
     email = request.json.get("email", None)
     password = request.json.get("password", None)
 
@@ -24,7 +37,8 @@ def login():
 
     if bcrypt.checkpw(password_bytes, hashed_password):
         access_token = create_access_token(identity=email)
-        return jsonify(access_token=access_token)
+        refresh_token = create_refresh_token(identity=email)
+        return jsonify(access_token=access_token, refresh_token=refresh_token), 200
     else:
         return jsonify({"Error": "Authentication error, wrong password"}), 401
 

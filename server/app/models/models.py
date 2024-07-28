@@ -14,7 +14,7 @@ class Users(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50))
     email = db.Column(db.String(50), nullable=False)
-    phone_no = db.Column(db.Integer(), nullable=False)
+    phone_no = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(250), nullable=False)
     items_found = db.relationship("Items", backref="users")
     connected_items_owner = db.relationship(
