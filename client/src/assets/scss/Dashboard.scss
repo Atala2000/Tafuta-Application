@@ -1,0 +1,362 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+.main {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  position: fixed;
+  height: 100%;
+  padding: 10px;
+  left: 0;
+  top: 0;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: #333;
+  color: white;
+  gap: 2rem;
+}
+
+nav .nav__link {
+  font-family: "Montserrat", sans-serif;
+  color: white;
+  text-decoration: none;
+  position: relative;
+}
+
+nav .nav__link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  background-color: #80cccc;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+nav .nav__link:hover::after {
+  left: 0;
+  width: 100%;
+}
+
+nav .nav__link:hover {
+  color: #80cccc;
+}
+
+main {
+  margin-left: 200px;
+  padding: 1px 16px;
+  height: 1000px;
+}
+
+#login__form__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+}
+
+#login__form {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+}
+
+/* Styling for form labels */
+#login__form label {
+  display: block;
+  margin-bottom: 10px;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Styling for input fields */
+#login__form input[type="text"],
+#login__form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  font-family: "Montserrat", sans-serif;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+/* Styling for the submit button */
+#login__form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  transition: background-color 0.3s ease;
+}
+
+#login__form button:hover {
+  background-color: #0056b3;
+}
+
+#home__page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: #f9f9f9;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* Title section styling */
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+/* Styling for the text part of the title */
+.title__text {
+  flex: 1;
+  max-width: 500px;
+}
+
+.title__text h1 {
+  font-size: 2.5rem;
+  text-align: left;
+  margin: 0;
+  color: #333;
+}
+
+.title__text p {
+  font-size: 2.2rem;
+  margin: 0;
+  text-align: left;
+  color: rgb(102, 102, 102);
+}
+
+/* Image styling */
+.title__image {
+  flex: 1;
+  max-width: 500px;
+  display: flex;
+  justify-content: center;
+}
+
+.title__image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Content section styling */
+.home__content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #333;
+}
+
+.home__content__text h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: left;
+  color: #fffefe;
+}
+
+.home__content__text p {
+  font-size: 1rem;
+  text-align: left;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  color: #ffffff;
+}
+
+/* Button styling */
+.links button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 5px;
+  text-transform: uppercase;
+}
+
+.links button:hover {
+  background-color: #0056b3;
+}
+
+/* Link styling */
+.links a {
+  text-decoration: none;
+  color: #fff;
+}
+
+#items__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+/* Title styling */
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Styling for each item container */
+.item__container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+  width: 100%;
+  max-width: 800px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item__container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for the item image */
+.item__img {
+  flex: 1;
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.item__img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-right: 2px solid #ddd;
+}
+
+/* Styling for the item body */
+.item__body {
+  flex: 2;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.item__body h2 {
+  font-size: 1.5rem;
+  margin-top: 0;
+  color: #333;
+}
+
+.item__body p {
+  font-size: 1rem;
+  margin: 5px 0;
+  color: #555;
+}
+
+.item__body p:first-of-type {
+  margin-top: 10px;
+}
+
+/* Report form container */
+#report__form__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+/* Form styling */
+#report__form {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Updated box shadow */
+    padding: 20px;
+    max-width: 600px;
+    width: 100%;
+}
+
+/* Form labels */
+#report__form label {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Form inputs */
+#report__form input[type="text"],
+#report__form input[type="date"],
+#report__form input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added box shadow */
+}
+
+/* File input specific styling */
+#report__form input[type="file"] {
+    border: none;
+    padding: 0;
+}
+
+/* Button styling */
+#report__form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added box shadow */
+}
+
+#report__form button:hover {
+    background-color: #0056b3;
+}
