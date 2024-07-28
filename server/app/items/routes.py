@@ -9,7 +9,7 @@ from flask import (
     render_template
 )
 import os
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.utils import secure_filename
 from app.models import models
 from app.models.database import DataStorage
@@ -56,6 +56,7 @@ def add_item():
         file.save(os.path.join(users_upload_folder, filename))
 
         try:
+            user = data.filter(models.Users, email=get_jwt_identity())[0]
             data.add(
                 models.Items(
                     date_found=request.form["date_found"],
@@ -63,7 +64,7 @@ def add_item():
                     description=request.form["description"],
                     filename=filename,
                     category=request.form["category"],
-                    users_id=request.form["users_id"],
+                    users_id=user.id,
                 )
             )
             file_url = url_for("items.get_item_file", filename=filename)
@@ -124,12 +125,13 @@ def update_item(id):
     Updates an item in the database
     """
     item = data.get(models.Items, id)
+    user = data.filter(models.Users, email=get_jwt_identity())[0]
     if item:
         item.date_found = request.form["date_found"]
         item.location_found = request.form["location_found"]
         item.description = request.form["description"]
         item.category = request.form["category"]
-        item.users_id = request.form["users_id"]
+        item.users_id = user.id
         data.update()
         return jsonify({"message": "Item updated successfully"})
     else:
