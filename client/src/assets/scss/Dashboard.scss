@@ -123,6 +123,76 @@ main {
   background-color: #0056b3;
 }
 
+#signup__form__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  padding: 20px;
+}
+
+#signup__form {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+#signup__form h1 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+#signup__form label {
+  display: block;
+  font-family: "Montserrat", sans-serif;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  text-align: left;
+  color: #333;
+}
+
+#signup__form input {
+  width: 100%;
+  padding: 10px;
+  font-family: "Montserrat", sans-serif;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+}
+
+.success {
+  color: green;
+  font-size: 0.9rem;
+}
+
+#signup__form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+#signup__form button:hover {
+  background-color: #0056b3;
+}
+
 #home__page {
   display: flex;
   flex-direction: column;
@@ -259,104 +329,121 @@ h1 {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Styling for the item image */
-.item__img {
-  flex: 1;
-  max-width: 200px;
-  overflow: hidden;
-}
-
+/* Styling for image */
 .item__img img {
-  width: 100%;
+  max-width: 150px;
   height: auto;
-  object-fit: cover;
   border-right: 2px solid #ddd;
+  padding: 10px;
 }
 
-/* Styling for the item body */
+/* Styling for body */
 .item__body {
-  flex: 2;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
+  padding: 10px;
+  flex: 1;
 }
 
-.item__body h2 {
-  font-size: 1.5rem;
-  margin-top: 0;
-  color: #333;
+/* Styling for notify button */
+.notify-btn {
+  background-color: #007bff;
+  font-family: "Montserrat", sans-serif;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.item__body p {
-  font-size: 1rem;
-  margin: 5px 0;
-  color: #555;
-}
-
-.item__body p:first-of-type {
-  margin-top: 10px;
+.notify-btn:hover {
+  background-color: #0056b3;
 }
 
 /* Report form container */
 #report__form__container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f9f9f9;
-    padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  padding: 20px;
 }
 
 /* Form styling */
 #report__form {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Updated box shadow */
-    padding: 20px;
-    max-width: 600px;
-    width: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Updated box shadow */
+  padding: 20px;
+  max-width: 600px;
+  width: 100%;
 }
 
 /* Form labels */
 #report__form label {
-    display: block;
-    margin-bottom: 15px;
-    font-size: 1rem;
-    color: #333;
+  display: block;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  color: #333;
 }
 
 /* Form inputs */
 #report__form input[type="text"],
 #report__form input[type="date"],
 #report__form input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added box shadow */
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added box shadow */
 }
 
 /* File input specific styling */
 #report__form input[type="file"] {
-    border: none;
-    padding: 0;
+  border: none;
+  padding: 0;
 }
 
 /* Button styling */
 #report__form button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added box shadow */
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added box shadow */
 }
 
 #report__form button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
+}
+
+
+.filter-container {
+  margin-bottom: 20px;
+}
+
+/* Filter dropdown styling */
+.filter-select {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+/* Filter dropdown hover and focus state */
+.filter-select:hover,
+.filter-select:focus {
+  border-color: #007bff;
+  outline: none;
 }
