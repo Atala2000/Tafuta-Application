@@ -5,6 +5,9 @@ const SignUp = () => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [phone, setPhone] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -13,29 +16,35 @@ const SignUp = () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ email, password, firstName, lastName })
+            body: JSON.stringify({ email, password, firstName, lastName, phone })
         });
         const data = await response.json();
         if (response.status === 200) {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
-
+            setSuccess('Sign up successful! Please log in.');
+            setError('');
         } else {
-            console.log(data);
+            setError(data.message || 'An error occurred');
+            setSuccess('');
         }
     }
 
     return (
-        <section id="login__form__container">
-            <form id="login__form" onSubmit={handleLogin}>
+        <section id="signup__form__container">
+            <form id="signup__form" onSubmit={handleLogin}>
+                <h1>Sign Up</h1>
+                {error && <p className="error">{error}</p>}
+                {success && <p className="success">{success}</p>}
                 <label htmlFor="firstName">
                     First Name:
                     <input
                         type="text"
                         id="firstName"
-                        placeholder="First Name"
+                        placeholder="John"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
+                        required
                     />
                 </label>
                 <label htmlFor="lastName">
@@ -43,9 +52,10 @@ const SignUp = () => {
                     <input
                         type="text"
                         id="lastName"
-                        placeholder="Last Name"
+                        placeholder="Doe"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
+                        required
                     />
                 </label>
                 <label htmlFor="email">
@@ -53,9 +63,10 @@ const SignUp = () => {
                     <input
                         type="email"
                         id="email"
-                        placeholder="Email"
+                        placeholder="example@gmail.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        required
                     />
                 </label>
                 <label htmlFor="password">
@@ -66,9 +77,21 @@ const SignUp = () => {
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
                 </label>
-                <button type="submit">Login</button>
+                <label htmlFor="phone">
+                    Phone Number:
+                    <input
+                        type="text"
+                        id="phone"
+                        placeholder="+254712345678"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                    />
+                </label>
+                <button type="submit">Register</button>
             </form>
         </section>
     );
