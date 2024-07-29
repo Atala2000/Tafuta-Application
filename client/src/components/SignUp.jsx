@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 const SignUp = () => {
     const [firstName, setFirstName] = useState('');
@@ -10,6 +12,9 @@ const SignUp = () => {
     const [success, setSuccess] = useState('');
 
     const handleLogin = async (e) => {
+        
+        const navigate = useNavigate();
+
         e.preventDefault();
         const response = await fetch('http://localhost:5000/auth/signup/', {
             method: 'POST',
@@ -23,6 +28,7 @@ const SignUp = () => {
             localStorage.setItem('accessToken', data.access);
             localStorage.setItem('refreshToken', data.refresh);
             setSuccess('Sign up successful! Please log in.');
+            navigate('/home');
             setError('');
         } else {
             setError(data.message || 'An error occurred');
