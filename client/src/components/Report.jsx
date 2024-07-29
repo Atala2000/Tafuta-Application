@@ -1,14 +1,15 @@
-import { useState , useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Report = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
-//     useEffect(() => {
-//     if (!localStorage.getItem('accessToken')) {
-//         navigate('/login');
-//     }
-// }, [navigate]);
+    useEffect(() => {
+        if (!localStorage.getItem('accessToken')) {
+            navigate('/login');
+        }
+    }, [navigate]);
+
     const [dateFound, setDateFound] = useState('');
     const [locationFound, setLocationFound] = useState('');
     const [description, setDescription] = useState('');
@@ -31,11 +32,14 @@ const Report = () => {
 
         const response = await fetch("http://localhost:5000/items/add", {
             method: "POST",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+            },
             body: formData
         });
 
         const data = await response.json();
-        if (data.status === 200) {
+        if (data.status === "success") {
             navigate('/items');
         } else {
             alert(data.message);
