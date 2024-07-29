@@ -49,20 +49,31 @@ def signup():
     Adds a new user to the database and logs them in
     """
     try:
+        # Extract data from request
         email = request.json.get("email")
         password = request.json.get("password")
-        first_name = request.json.get("first_name")
-        phone_no = request.json.get("phone_no")
+        first_name = request.json.get("firstName")
+        last_name = request.json.get("lastName")
+        phone_no = request.json.get("phone")
 
+        # Validate data
+        if not all([email, password, first_name, last_name, phone_no]):
+            return jsonify({"error": "All fields are required"}), 400
+
+        # Hash the password
         password_bytes = password.encode("utf-8")
         hashed_password = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
 
+        # Create a new user instance
         new_user = models.Users(
             email=email,
             password=hashed_password,
             first_name=first_name,
+            last_name=last_name,
             phone_no=phone_no,
         )
+
+        # Save the new user to the database
         data_storage.add(new_user)
 
         # Automatically log in the user after signup
